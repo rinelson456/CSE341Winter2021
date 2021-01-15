@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<link rel="stylesheet" href="/public/stylesheets/prove02.css">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>View Book</title>
+    <link rel="stylesheet" href="/public/stylesheets/prove02.css">
+</head>
+
+<body>
+    <header class="mainHeader">
+        <nav class="mainHeaderNav">
+            <ul class="mainHeaderItemList">
+                <li class="mainHeaderItem"><a href="/prove02/">View Book</a></li>
+                <li class="mainHeaderItem"><a href="/prove02/admin/addProduct">Add Book</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <main>
+        <% if (book.length > 0) { %>
+            <div class="grid">
+                <% for (let books of book) { %>
+                    <article>
+                        <header>
+                            <h1>
+                                <%= books.title %>
+                            </h1>
+                            <hr>
+                            <p>
+                                <%= books.summary %>
+                            </p>
+                        </header>
+                        <div>
+                        </div>
+                    </article>
+                    <% } %>
+            </div>
+            <% } else {%>
+                <h1>No Book Found</h1>
+                <% } %>
+    </main>
+</body>
+
+</html>

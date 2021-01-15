@@ -34,3 +34,7 @@ body header nav ul li a {
 body header nav ul li {
     padding-left: 10px;
 }
+
+hr {
+    color: grey;
+}
