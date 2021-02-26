@@ -13,6 +13,31 @@
                     <%= title %>
                 </h1>
                 <p>This is the placeholder for Team Activity 03</p>
+                <form action="/ta03/search" method="POST">
+                    <input type="text" name="tag" placeholder="tag">
+                    <button type="submit">Search for tag</button>
+                </form>
+                <!-- Each object has: name, price, description, imageUrl, and an array of tags -->
+                <ul>
+                    <% for (let product of productList) { %>
+                        <li>
+                            <p>
+                                <%= product.name %><br>
+                                    <%= product.description %><br>
+                                        <%= product.price %>
+                            </p>
+                            <img src="<%= product.imageUrl %>" alt="<%= product.name %>"></img>
+                            <p> tags: </p>
+                            <ul>
+                                <% for (let tag of product.tags) { %>
+                                    <li>
+                                        <%= tag %>
+                                    </li>
+                                    <% } %>
+                            </ul>
+                        </li>
+                        <% } %>
+                </ul>
             </div>
         </div>
         <div class="container">

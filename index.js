@@ -27,16 +27,13 @@ const prove01Routes = require('./routes/proveRoutes/prove01');
 //const prove02Routes = require('./routes/proveRoutes/prove02');
 const prove03Routes = require('./routes/proveRoutes/prove03');
 const prove04Routes = require('./routes/proveRoutes/prove04');
+const prove08Routes = require('./routes/proveRoutes/prove08');
 
 app.use(express.static(path.join(__dirname, 'public')))
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
-    // For view engine as Pug
-    //.set('view engine', 'pug') // For view engine as PUG. 
-    // For view engine as hbs (Handlebars)
-    //.engine('hbs', expressHbs({layoutsDir: 'views/layouts/', defaultLayout: 'main-layout', extname: 'hbs'})) // For handlebars
-    //.set('view engine', 'hbs')
-    .use(bodyParser({ extended: false })) // For parsing the body of a POST
+
+.use(bodyParser({ extended: false })) // For parsing the body of a POST
     .use('/ta01', ta01Routes)
     .use('/ta02', ta02Routes)
     .use('/ta03', ta03Routes)
@@ -45,6 +42,7 @@ app.use(express.static(path.join(__dirname, 'public')))
     //.use('/prove02', prove02Routes)
     .use('/prove03', prove03Routes)
     .use('/prove04', prove04Routes)
+    .use('/prove08', prove08Routes)
     .get('/', (req, res, next) => {
         // This is the primary index, always handled last. 
         res.render('pages/index', { title: 'Welcome to my CSE341 repo', path: '/' });
