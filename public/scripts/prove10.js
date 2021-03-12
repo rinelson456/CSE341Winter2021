@@ -22,7 +22,7 @@ const populateList = () => {
     const nameList = document.getElementById('nameList')
     nameList.innerHTML = ''
 
-    const data = getData('/proveAssignments/prove10-server/fetchAll')
+    const data = getData('/prove10/fetchAll')
 
     data.then(json => {
         json.avengers.forEach(item => {
@@ -34,13 +34,14 @@ const populateList = () => {
 const submitName = () => {
     const newName = document.getElementById('newName').value
 
-    const data = postData('/proveAssignments/prove10-server/insertName', {
+    const data = postData('/prove10/insertName', {
         newName: newName
     })
 
     data.then(response => {
         console.log(response)
         if (response.status == 200) {
+            console.log('here');
             populateList()
         } else {
             console.error(status)
