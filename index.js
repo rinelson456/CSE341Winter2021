@@ -14,6 +14,7 @@
 const express = require('express');
 const bodyParser = require('body-parser');
 const path = require('path');
+const session = require('express-session')
 const PORT = process.env.PORT || 5000 // So we can run on heroku || (OR) localhost:5000
 
 const app = express();
@@ -31,10 +32,23 @@ const prove08Routes = require('./routes/proveRoutes/prove08');
 const prove09Routes = require('./routes/proveRoutes/prove09');
 const prove10Routes = require('./routes/proveRoutes/prove10-server');
 const prove11Routes = require('./routes/proveRoutes/prove11');
+const prove12Routes = require('./routes/proveRoutes/prove12')
 
 app.use(express.static(path.join(__dirname, 'public')))
     .set('views', path.join(__dirname, 'views'))
     .set('view engine', 'ejs')
+    .use(express.json())
+    .use(bodyParser.urlencoded({ extended: true }))
+    .use(express.static(path.join(__dirname, 'public')))
+    .use(
+        session({
+            // Simple and not very secure session
+            secret: 'random_text',
+            cookie: {
+                httpOnly: false // Permit access to client session
+            }
+        })
+    )
 
 .use(bodyParser({ extended: false })) // For parsing the body of a POST
     .use('/ta01', ta01Routes)
@@ -49,6 +63,7 @@ app.use(express.static(path.join(__dirname, 'public')))
     .use('/prove09', prove09Routes)
     .use('/prove10', prove10Routes)
     .use('/prove11', prove11Routes)
+    .use('/prove12', prove12Routes)
     .get('/', (req, res, next) => {
         // This is the primary index, always handled last. 
         res.render('pages/index', { title: 'Welcome to my CSE341 repo', path: '/' });
@@ -58,17 +73,36 @@ app.use(express.static(path.join(__dirname, 'public')))
         res.render('pages/404', { title: '404 - Page Not Found', path: req.url })
     })
 
+
+
 const server = app.listen(PORT)
 
 const io = require('socket.io')(server)
-
 io.on('connection', socket => {
-    console.log('Client connected')
-    socket.on('new-name', update => {
-        if (update) {
-            socket.broadcast.emit('update-list')
-        } else {
-            console.log('Looks like something went wrong')
-        }
-    })
+    console.log('Client connected!')
+
+    socket
+        .on('disconnect', () => {
+            console.log('A client disconnected!')
+        })
+        .on('newUser', (username, time) => {
+            // A new user logs in.
+            const message = `${username} has logged on.`
+                // Tell other users someone has logged on.
+            socket.broadcast.emit('newMessage', {
+                message,
+                time,
+                from: 'admin'
+            })
+        })
+        .on('message', data => {
+            // Receive a new message
+            console.log('Message received')
+            console.log(data)
+                // This one is simple. Just broadcast the data we received.
+                // We can use { ...data } to copy the data object.
+            socket.broadcast.emit('newMessage', {
+                    ...data
+                }) // Note, only emits to all OTHER clients, not sender.
+        })
 })
